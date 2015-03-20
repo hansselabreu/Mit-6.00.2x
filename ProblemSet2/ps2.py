@@ -254,6 +254,7 @@ class StandardRobot(Robot):
 ##testRobotMovement(StandardRobot, RectangularRoom)
 
 
+
 # === Problem 3
 def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
                   robot_type):
@@ -275,19 +276,23 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     """
     count = 0
     mean = 0.0
+    total = 0.0
     min_cov = 0.0
     for trial in range(num_trials):
         room = RectangularRoom(width, height)
         for robot in range(num_robots):
+            count = 0
             robot = robot_type(room, speed)
             while min_cov != min_coverage:
                 robot.updatePositionAndClean()
                 count += 1
                 min_cov = room.getNumCleanedTiles() / float(room.getNumTiles())
-            return count
-    return count
+            total += count
+    mean = total / float(num_robots)
+    return total
 # Uncomment this line to see how much your simulation takes on average
-print  runSimulation(1, 1.0, 10, 10, 0.75, 30, StandardRobot)
+##print  runSimulation(1, 1.0, 10, 10, 0.75, 30, StandardRobot)
+
 
 
 # === Problem 4
