@@ -375,12 +375,12 @@ def showPlot2(title, x_label, y_label):
 # 1) Write a function call to showPlot1 that generates an appropriately-labeled
 #     plot.
 #
-showPlot1('Time It Takes 1 - 10 Robots To Clean 80% Of A Room','Number of robots','Time-steps')
+#showPlot1('Time It Takes 1 - 10 Robots To Clean 80% Of A Room','Number of robots','Time-steps')
 #
 
 #
 # 2) Write a function call to showPlot2 that generates an appropriately-labeled
 #     plot.
 #
-#       (... your call here ...)
+showPlot1('LoL', 'x','y')
 #
