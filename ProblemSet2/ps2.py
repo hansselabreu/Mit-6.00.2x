@@ -278,27 +278,28 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     mean = 0.0
     total = 0.0
     min_cov = 0.0
-    anim = ps2_visualize.RobotVisualization(num_robots, width, height)
-    for trial in range(num_trials):
 
+    for trial in range(num_trials):
+        #anim = ps2_visualize.RobotVisualization(num_robots, width, height)
         room = RectangularRoom(width, height)
         robots = []
         for i in range(num_robots):
             robots.append(robot_type(room, speed))
         
         count = 0
-        while min_cov != min_coverage:
+        while min_cov < min_coverage:
             for robot in robots:
-                anim.update(room, robots)
+                #anim.update(room, robots)
                 robot.updatePositionAndClean()
                 count += 1
                 min_cov = room.getNumCleanedTiles() / float(room.getNumTiles())
-            total += count
-        anim.done() 
+        total += count
+        #anim.done()
+        
     mean = total / float(num_robots)
-    return total
+    return mean
 # Uncomment this line to see how much your simulation takes on average
-#print  runSimulation(1, 1.0, 10, 10, 0.75, 30, StandardRobot)
+#print  runSimulation(1, 1.0, 5,5, 1, 30, StandardRobot)
 
 
 
@@ -374,7 +375,7 @@ def showPlot2(title, x_label, y_label):
 # 1) Write a function call to showPlot1 that generates an appropriately-labeled
 #     plot.
 #
-#       (... your call here ...)
+showPlot1('Time It Takes 1 - 10 Robots To Clean 80% Of A Room','Number of robots','Time-steps')
 #
 
 #
