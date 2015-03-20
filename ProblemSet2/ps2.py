@@ -285,9 +285,10 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
         robots = []
         for i in range(num_robots):
             robots.append(robot_type(room, speed))
-        for robot in robots:
-            count = 0
-            while min_cov != min_coverage:
+        
+        count = 0
+        while min_cov != min_coverage:
+            for robot in robots:
                 anim.update(room, robots)
                 robot.updatePositionAndClean()
                 count += 1
