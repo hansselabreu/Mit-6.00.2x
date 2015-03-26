@@ -155,7 +155,7 @@ class Patient(object):
         
         for virus in self.viruses:
             try:
-                density = self.getTotalPop() / self.getMaxPop()
+                density = self.getTotalPop() / float(self.getMaxPop())
                 new_virus = virus.reproduce(density)
                 self.viruses.append(new_virus)
             except NoChildException:
@@ -166,6 +166,7 @@ class Patient(object):
 #
 # PROBLEM 3
 #
+#from ps3b_precompiled_27 import *  
 def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
                           numTrials):
     """
@@ -181,11 +182,27 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
     clearProb: Maximum clearance probability (a float between 0-1)
     numTrials: number of simulation runs to execute (an integer)
     """
+    
+    vir_population = []
+    avg_population = []
 
-    # TODO
-
-
-
+    for trial in range(numTrials):
+        patient = None
+        viruses = []
+        for i in range(numViruses):
+            viruses.append(SimpleVirus(maxBirthProb, clearProb))
+        patient = Patient(viruses, maxPop)
+        patient_viruses = 0
+        for i in range(300):
+            vir_population.append( patient.update())
+    for i in range(len(vir_population)):
+        vir_population[i] /= float(numTrials)
+    pylab.title('Virus population over time')
+    pylab.xlabel('# of Trials')
+    pylab.ylabel('Avg size of virus population')
+    pylab.legend()
+    pylab.plot(vir_population)
+    pylab.show()
 #
 # PROBLEM 4
 #
