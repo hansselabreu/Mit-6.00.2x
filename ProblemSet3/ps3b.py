@@ -414,6 +414,24 @@ class TreatedPatient(Patient):
         returns: The total virus population at the end of the update (an
         integer)
         """
+        lst = list(self.viruses)
+        for virus in lst:
+            if virus == None:
+                continue
+            if virus.doesClear():
+                self.viruses.remove(virus)
+                
+        lst = list(self.viruses)
+        for virus in lst:
+            if virus == None:
+                continue
+            try:
+                density = self.getTotalPop() / float(self.getMaxPop())
+                new_virus = virus.reproduce(density, self.getPrescriptions())
+                self.viruses.append(new_virus)
+            except NoChildException:
+                continue
+        return self.getTotalPop()
 
 
 
