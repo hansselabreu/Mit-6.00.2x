@@ -416,15 +416,15 @@ class TreatedPatient(Patient):
         """
         lst = list(self.viruses)
         for virus in lst:
-            if virus == None:
-                continue
+            if virus == None:#habia que poner esto, sino el grader de edx
+                continue     #se ponia a llorar
             if virus.doesClear():
                 self.viruses.remove(virus)
                 
         lst = list(self.viruses)
         for virus in lst:
-            if virus == None:
-                continue
+            if virus == None: #ver el comment de arriba
+                continue      
             try:
                 density = self.getTotalPop() / float(self.getMaxPop())
                 new_virus = virus.reproduce(density, self.getPrescriptions())
