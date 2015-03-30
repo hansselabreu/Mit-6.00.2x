@@ -516,9 +516,9 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
     pylab.title('Virus population over time')
     pylab.xlabel('# of Trials')
     pylab.ylabel('Avg size of virus population')
-    pylab.legend()         
     pylab.plot(avg_population)
     pylab.plot(avg_res_population)
-    #print avg_population
+    pylab.legend(['Total\npopulation',
+                  'Resistant\npopulation']
+                 , bbox_to_anchor=(1.11,1.1))
     pylab.show()
-    
