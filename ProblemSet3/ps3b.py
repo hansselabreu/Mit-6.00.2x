@@ -331,7 +331,8 @@ class ResistantVirus(SimpleVirus):
                 else:   #probability of mutProb of switching the resistance
                     childResistances[trait] = not self.resistances[trait]
             return ResistantVirus(self.maxBirthProb, self.clearProb, childResistances, self.mutProb) #reproduces the virus
-
+        else:
+            raise NoChildException
         
 class TreatedPatient(Patient):
     """
@@ -392,18 +393,18 @@ class TreatedPatient(Patient):
         """
         totalResistantViruses = 0
         for virus in self.viruses:
-            if virus == None:
-                continue
             resistantToAllDrugs = True
             for drug in drugResist:
                 if not virus.isResistantTo(drug):
                     resistantToAllDrugs = False
                     break
-                resistantToAllDrugs = resistantToAllDrugs and virus.isResistantTo(drug)
                 
             if resistantToAllDrugs:
                 totalResistantViruses += 1
+                
         return totalResistantViruses
+
+    
     def update(self):
         """
         Update the state of the virus population in this patient for a single
@@ -426,21 +427,17 @@ class TreatedPatient(Patient):
         """
         lst = list(self.getViruses())
         for virus in lst:
-            if virus == None:#habia que poner esto, sino el grader de edx
-                continue     #se ponia a llorar
             if virus.doesClear():
                 self.viruses.remove(virus)
                 
         lst = list(self.viruses)
         for virus in lst:
-            if virus == None: #ver el comment de arriba
-                continue      
             try:
                 density = self.getTotalPop() / float(self.getMaxPop())
                 new_virus = virus.reproduce(density, self.getPrescriptions())
                 self.viruses.append(new_virus)
             except NoChildException:
-                continue
+                pass
         return self.getTotalPop()
 
 
@@ -449,7 +446,7 @@ class TreatedPatient(Patient):
 #
 # PROBLEM 5
 #
-from ps3b_precompiled_27 import *    
+#from ps3b_precompiled_27 import *    
 def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
                        mutProb, numTrials):
     """
@@ -472,29 +469,56 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
     numTrials: number of simulation runs to execute (an integer)
     
     """
+    N = 300
     vir_population = []
     avg_population = []
+    res_population = []
+    avg_res_population =[]
+    alreadyIterated = False
+    #for each trial in numTrials
     for trial in range(numTrials):
         patient = None
         viruses = []
+        #instantiate numViruses viruses 
         for i in range(numViruses):
             viruses.append(ResistantVirus(maxBirthProb, clearProb, resistances, mutProb))
+        #instantiate a patient
         patient = TreatedPatient(viruses, maxPop)
-        patient_viruses = 0
+
+        #run the simulation for 150 timesteps
         for i in range(150):
-            vir_population.append( patient.update())
-        
+            if not alreadyIterated:
+                vir_population.append( patient.update())
+                res_population.append(patient.getResistPop(['guttagonol']))
+            else:
+                vir_population[i] += patient.update()
+                res_population[i] += patient.getResistPop(['guttagonol'])
+
+        #add guttagonol
         patient.addPrescription('guttagonol')
+
+        #run simulation for an additional 150 timesteps
         for i in range(150):
-            vir_population.append( patient.update())   
+            if not alreadyIterated:
+                vir_population.append( patient.update())
+                res_population.append(patient.getResistPop(['guttagonol']))
+            else:
+                vir_population[i + 150] += patient.update()
+                res_population[i +150] += patient.getResistPop(['guttagonol'])
+        alreadyIterated = True 
+    #calculate the average
     for i in range(len(vir_population)):
-        vir_population[i] /= float(numTrials)
+        temp_vir_avg = vir_population[i] / float(numTrials)
+        avg_population.append(temp_vir_avg)
+        temp_res_avg = res_population[i] / float(numTrials)
+        avg_res_population.append(temp_res_avg)
         
     pylab.title('Virus population over time')
     pylab.xlabel('# of Trials')
     pylab.ylabel('Avg size of virus population')
     pylab.legend()         
-    pylab.plot(vir_population)
-    print vir_population
-    #pylab.show()
+    pylab.plot(avg_population)
+    pylab.plot(avg_res_population)
+    #print avg_population
+    pylab.show()
     
